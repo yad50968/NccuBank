@@ -8,7 +8,7 @@
 
 <button id="show_user1_address_button">user1 address</button>
 <button id="show_user2_address_button">user2 address</button>
-	
+    
 <button id="show_user1_nccucoin_button">user1 nccucoin</button>
 <button id="show_user2_nccucoin_button">user2 nccucoin</button>
 
@@ -31,10 +31,10 @@
 <button id="show_user_product1_address_button">product1 address</button>
 
 </div>
-	
+    
 <div>
-	
-<h4> User1's Product1	</h4>
+    
+<h4> User1's Product1   </h4>
 <div id="put_p1">
 </div>
 
@@ -62,10 +62,10 @@
 
 <div>
 <h4>log : </h4>
-	
+    
 <textarea rows="10" id="log" cols="100" value=" ">
 </textarea>
-	
+    
 </div>
 <div>
 <pre>
@@ -96,7 +96,6 @@ contract NccuBank {
     
     // initial
     function NccuBank() {
-        minter = msg.sender;
         balances[user1] = 1000000;
         balances[user2] = 1000000;
     }
@@ -192,7 +191,7 @@ contract Product1 {
 
         // 呼叫NccuBank合約
         NccuBank nb = NccuBank(nccubank_address);
-        nb.product1_maturity(who_buy, amount, installments);
+        nb.product1_terminal(who_buy, amount, installments, have_installments);
         
 
         // 合約自殺
