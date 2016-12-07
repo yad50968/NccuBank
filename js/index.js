@@ -180,7 +180,7 @@ $(function() {
 		// 提款
 		// withdraw 本身有兩個 args，而 { from: from, gas: ... } 為 tx object
 		
-		if( transferTo.val() =="" || test_number(transferTo.val())){
+		if( transferTo.val() =="" || !test_number(transferEtherValue.val())){
 			   alert("請輸入正確金額或轉帳對象");
 		}else{
 		
@@ -281,12 +281,35 @@ function newBank(web3, log, contractAddress) {
 			log(contract);
 			bank = contract;
 			contractAddress.text('合約位址:' + bank.address);
+			empty_html();
 		}
 	});
 	
 	
 }
-
+function empty_html(){
+	var deposit = $('#deposit');
+	var withdraw = $('#withdraw');
+	var transferTo = $('#transferTo');
+	var transferEtherValue = $('#transferEtherValue');
+	var ethBalance = $('#ethBalance');
+	var bankBalance = $('#bankBalance');
+	var amount = $('#amount');
+	var installment = $('#installment');
+	var put_p1 = $('#put_p1');
+	
+	amount.val("");
+	installment.val("");
+	deposit.val("");
+	withdraw.val("");
+	transferTo.val("");
+	transferEtherValue.val("");
+	ethBalance.html("以太帳戶餘額 (wei): ");
+	bankBalance.html("銀行合約餘額 (wei): ");
+	put_p1.empty();
+	
+	
+}
 function loadBank(web3, address, log, contractAddress) {
 	var bankContract = web3.eth.contract(bankAbi);
 	if (address === undefined || address === null) {
@@ -294,7 +317,9 @@ function loadBank(web3, address, log, contractAddress) {
 	} else {
 		bank = bankContract.at(address);
 		contractAddress.text('合約位址:' + bank.address);
+		
 	}
+	empty_html();
 	console.log(bank);
 	log(bank);
 }
