@@ -28,6 +28,8 @@ $(function() {
 	
 	var now_account ;
 	var contractAddress = $('#contractAddress');
+	
+	var loadDeployedContractButton = $('#loadDeployedContractButton');
 	var deployedContractAddress = $('#deployedContractAddress');
 	var deployNewContractButton = $('#deployNewContractButton');
 	var whoami = $('#whoami');
@@ -49,6 +51,11 @@ $(function() {
 	});
 	log(web3.eth.accounts);
 	log('以太帳戶');
+	
+	loadDeployedContractButton.on('click', function() {
+		loadBank(web3, deployedContractAddress.val(), log, contractAddress);
+	});
+	
 	
 	// 當按下部署合約時
 	deployNewContractButton.on('click', function() {
@@ -278,6 +285,18 @@ function newBank(web3, log, contractAddress) {
 	});
 	
 	
+}
+
+function loadBank(web3, address, log, contractAddress) {
+	var bankContract = web3.eth.contract(bankAbi);
+	if (address === undefined || address === null) {
+		bank = bankContract.at(nccuChainBankAddress);
+	} else {
+		bank = bankContract.at(address);
+		contractAddress.text('合約位址:' + bank.address);
+	}
+	console.log(bank);
+	log(bank);
 }
 
 function product1_maturity_function(){
