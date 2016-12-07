@@ -1,0 +1,27 @@
+body {
+	background: #E0F2F7;
+}
+.Header{
+　width:360px;
+　height:80px;
+　text-align:center;
+　line-height:80px;
+　font-size:15px;
+	
+}
+.parent{
+	position:absolute;
+}
+.left{
+　position: relative;
+	float:left;
+	height: 350px;
+	width: 200px;
+}
+.right{
+　position: relative;
+	float: left;
+	height: 350px;
+	width: 200px;
+	margin-left: 100px;
+}

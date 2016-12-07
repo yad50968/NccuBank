@@ -1,44 +1,73 @@
-<h4>請記得開啟 geth 並且 unlock 所使用的帳號</h4>
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>nccubank web3.js</title>
+  
+  
+  
+      <link rel="stylesheet" href="css/style.css">
+
+  
+</head>
+
+<body>
+  
+<div class="Header">
+<h4>NCCU Bank</h4>
+
+<h5 id="contractAddress">合約位址: </h5>
+<button type="button" class="btn btn-default" id="deployNewContractButton">部署新合約</button>
 
 
 
-<div>
-<h4 id="datah4">Methond -1 </h4>
+<h3>帳戶登入</h3>
+<select id="whoami"></select>
+<button type="button" class="btn btn-default" id="whoamiButton">登入</button>
+
+<h3>帳戶狀態</h3>
+<h5 id="ethBalance">以太帳戶餘額 (wei): </h5>
+<h5 id="bankBalance">銀行合約餘額 (wei): </h5>
+
+</div>  
 
 
-<button id="show_user1_address_button">user1 address</button>
-<button id="show_user2_address_button">user2 address</button>
+<hr>
+
+<div class="parent">
+	<div class="left">
+<h3>存款</h3>
+<input id="deposit" type="number" placeholder="請輸入存款額度 (ether)">
+<button type="button" class="btn btn-default" id="depositButton">執行</button>
+
+<h3>提款</h3>
+<input id="withdraw" type="number" placeholder="請輸入提款額度 (ether)">
+<button type="button" class="btn btn-default" id="withdrawButton">執行</button>
+
+<h3>轉帳</h3>
+<input id="transferTo" type="text" placeholder="請輸入轉帳對象">
+<input id="transferEtherValue" type="number" placeholder="請輸入轉帳額度 (ether)">
+<button type="button" class="btn btn-default" id="transferButton">執行</button>
+
+
+
+
+
+<h4 id="datah4">Product</h4>
+
+
+<input id="amount" type="text" placeholder="金額"/>
+<input id="installment" type="text" placeholder="期數"/>
+<button type="button" class="btn btn-default" id="generate_product1_button">產生product</button>
+
+
     
-<button id="show_user1_nccucoin_button">user1 nccucoin</button>
-<button id="show_user2_nccucoin_button">user2 nccucoin</button>
 
-</div>
-
-<div>
-<h4 id="datah4">Product1 : </h4>
-
-<input id="user_address" type="text" placeholder="user1 address"/>
-<input id="amount" type="text" placeholder="amount"/>
-<input id="installment" type="text" placeholder="installment"/>
-<button id="generate_product1_button">產生product1</button>
-
-</div>
-
-<div>
-
-</br>
-<input id="user_address_for_show_product1" type="text" placeholder="user1 address"/>
-<button id="show_user_product1_address_button">product1 address</button>
-
-</div>
-    
-<div>
-    
-<h4> User1's Product1   </h4>
+<h4 id="who_s_p1"> </h4>
 <div id="put_p1">
-</div>
-
+		</div>
 <p>
+	<h6>
 期數｜利率</br>
 ０１｜0.01</br>
 ０２｜0.02</br>
@@ -52,168 +81,37 @@
 １０｜0.10</br>
 １１｜0.11</br>
 １２｜0.12</br>
+</h6>
 </p>
-
 <div>
+	<h5>
+		Accounts List
+	<p id="accounts_list">
+	</p>
+	</h5>
+</div>
+
+
 
 
 </div>
 
+<div class ="right">
 
-<div>
+
 <h4>log : </h4>
     
-<textarea rows="10" id="log" cols="100" value=" ">
+<textarea rows="45" id="log" cols="100" value=" ">
 </textarea>
     
 </div>
-<div>
-<pre>
-pragma solidity ^0.4.0;
 
-contract NccuBank {
-    
-   
-    // 預設 nccubank 的貨幣 
-    uint public nccubank_coin = 10000000;
-    
-    // user 有多少 coin
-    mapping (address => uint) public balances;
-    
-    // user 的 某產品 的 address
-    mapping (address => mapping (string => address))  who_buy_which_product;
-    
-    // 預設 2個 user
-    address public user1 = 0xca35b7d915458ef540ade6068dfe2f44e8fa733c;
-    address public user2 = 0x14723a09acff6d2a60dcdf7aa4aff308fddc160c;
-
-    // 用來記錄 generate produtc1 的 event
-    event generate_product1_event(address _who_buy, uint _amount, uint _installments, address product1_address);
-
-    
-    string public product_1 = "product1";
-    
-    
-    // initial
-    function NccuBank() {
-        balances[user1] = 1000000;
-        balances[user2] = 1000000;
-    }
-    
-    function show_user1_address() constant returns(address){
-        return user1;
-    }
-
-    function show_user2_address() constant returns(address){
-        return user2;
-    }
-    
-    function show_user1_balance() constant returns(uint){
-        return balances[user1];
-    }
-    
-    function show_user2_balance() constant returns(uint){
-        return balances[user2];
-    }
-    
-    function show_product1_address(address user) constant returns(address){
-        return who_buy_which_product[user][product_1];   
-    }
-
-    function create_product_1(address whobuy,uint amount, uint installments) {
-        
-        // 如果user沒錢 throw
-        if (balances[whobuy] < amount) {
-            throw;
-        }
-        
-        balances[whobuy] -= amount;
-        nccubank_coin += amount;
-        
-        // 產出 product1 contract
-        Product1 product1_contract = new Product1(whobuy, amount, installments, this);
-        who_buy_which_product[whobuy][product_1] = product1_contract.contractAddress();
-
-        // 發送 event
-        generate_product1_event(whobuy, amount, installments, product1_contract.contractAddress());
-        
-    }
-    
-    // 完成 要把利息加本金送給買家
-    function product1_maturity(address whobuy, uint amount,uint installments){
-        
-        who_buy_which_product[whobuy][product_1] = 0x0;
-        nccubank_coin -= amount + amount * installments/100;  
-        balances[whobuy] += amount + amount * installments/100;
-        
-    }
-    
-    
-    // 提前解約 要退回剩下錢
-    function product1_terminal(address whobuy, uint amount,uint installments, uint have_installments){
-        
-        who_buy_which_product[whobuy][product_1] = 0x0;
-        nccubank_coin -= amount*(installments-have_installments)/installments;
-        balances[whobuy] += amount*(installments-have_installments)/installments;
-        
-    }
-    
-    
-}
-
-
-
-contract Product1 {
-    
-    
-    address nccubank_address;
-    address who_buy;
-    uint amount;
-    uint installments;
-    
-   
-    function Product1(address _who_buy, uint _amount, uint _installments, address _nccubank_address) {
-        
-        who_buy = _who_buy;
-        nccubank_address = _nccubank_address;
-        amount = _amount;
-        installments = _installments;
-        
-    }
-    
-    // 回傳此合約address
-    function contractAddress() constant returns(address) {
-        return this;
-    }
-    
-    
-    function terminal(uint have_installments){
-
-        // 呼叫NccuBank合約
-        NccuBank nb = NccuBank(nccubank_address);
-        nb.product1_terminal(who_buy, amount, installments, have_installments);
-        
-
-        // 合約自殺
-        suicide(0x0);
-        
-    }
-    
-    
-    
-    function maturity(){
-        
-        // 呼叫NccuBank合約
-        NccuBank nb = NccuBank(nccubank_address);
-        nb.product1_maturity(who_buy, amount, installments);
-        
-
-        // 合約自殺
-        suicide(0x0);
-        
-    }
-    
-    
-}
-</pre>
 </div>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script>
+<script src='http://140.119.164.162:8080/bower_components/web3/dist/web3.min.js'></script>
+
+    <script src="js/index.js"></script>
+
+</body>
+</html>
